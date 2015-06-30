@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+   Copyright 2015 IBM Corporation.
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+-->
+<action-configuration
+	xmlns="http://www.ibm.com/xmlns/prod/serviceregistry/Actions" name="GenerateSV"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.ibm.com/xmlns/prod/serviceregistry/Actions Actions.xsd">
+	
+	<create-action result-var="$2">
+	<create-entity model-type="http://www.ibm.com/xmlns/prod/serviceregistry/profile/v6r3/GovernanceProfileExtensions#ServiceLevelDefinition" />
+		<set-name value="SLD - ${trigger.name} (1.0.0)" />
+		<set-property name="namespace" value="${trigger.namespace}" />
+		<set-property name="description" value="SLD for the ${trigger.name} service version." />
+	</create-action>
+	
+	<create-action result-var="$1">
+		<create-entity
+			model-type="http://www.ibm.com/xmlns/prod/serviceregistry/profile/v6r3/GovernanceEnablementModel#ServiceVersion" />
+		<set-name value="${trigger.name}" />
+		<set-property name="namespace" value="${trigger.namespace}" />
+		<set-property name="description" value="Version for the ${trigger.name} service." />
+		<set-property name="version" value="1.0.0" />
+		<set-relationship name="ale63_owningOrganization" target-query="//*[@bsrURI='${trigger.bsrURI}']/ale63_owningOrganization(.)" />
+		<set-relationship name="gep63_provides" target-query="$2" />
+	</create-action>
+
+	<update-action target-query="//*[@bsrURI='${trigger.bsrURI}']">
+		<set-relationship name="gep63_capabilityVersions" mode="add"
+			target-query="$1" />
+	</update-action>
+</action-configuration>
+	
