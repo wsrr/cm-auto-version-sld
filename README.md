@@ -41,3 +41,7 @@ To test you need to:
 3. Examine the details of the business service.
 
 A version and SLD will have been created and can be seen from the details of the business service.
+
+## License
+
+Licensed under the Apache License, Version 2.0 (the "License"). See license.txt.
